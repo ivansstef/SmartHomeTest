@@ -33,5 +33,4 @@ jobs:
         with:
           name: arduino-hex-files
           path: |
-            examples/main/*.hex
-            examples/main/*.bin
+            examples/main/build
