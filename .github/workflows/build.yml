@@ -1,0 +1,31 @@
+name: Arduino Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - '**'
+  pull_request:
+
+jobs:
+  compile-sketch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile Arduino sketch
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:avr:uno
+          sketch-paths: |
+            ./examples
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: arduino-hex-files
+          path: |
+            /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/examples/build
