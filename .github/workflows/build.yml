@@ -9,25 +9,29 @@ on:
   pull_request:
 
 jobs:
-  compile-sketch:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile Arduino sketch
-        uses: arduino/compile-sketches@v1
-        with:
-          fqbn: arduino:avr:uno
-          sketch-paths: |
-            examples
-          cli-compile-flags: |
-            --output-dir build
-          verbose: true
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
 
-      - name: Upload build artifacts
+      - name: Install Arduino AVR core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+
+      - name: Compile sketch
+        run: |
+          arduino-cli compile --fqbn arduino:avr:uno --export-binaries examples/main
+
+      - name: Upload HEX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: arduino-build-files
-          path: build
+          name: arduino-hex-files
+          path: |
+            examples/main/*.hex
+            examples/main/*.bin
