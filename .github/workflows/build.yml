@@ -21,11 +21,13 @@ jobs:
         with:
           fqbn: arduino:avr:uno
           sketch-paths: |
-            ./examples
+            examples
+          cli-compile-flags: |
+            --output-dir build
+          verbose: true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: arduino-hex-files
-          path: |
-            /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/examples/build
+          name: arduino-build-files
+          path: build
